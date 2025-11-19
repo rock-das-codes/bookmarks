@@ -1,4 +1,3 @@
-"use client"
 import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent, ReactNode } from 'react';
 import { 
   Folder as FolderIcon, Plus, Lock, Unlock, ExternalLink, Trash2, X, Shield, 
@@ -527,6 +526,22 @@ export default function VelvetVault() {
     setFolders(updatedFolders);
   };
 
+  const handleDeleteFromModal = () => {
+    if (selectedBookmark && activeFolderId) {
+      if (!window.confirm("Remove this bookmark?")) return;
+      const updatedFolders = folders.map(f => {
+        if (f.id === activeFolderId) {
+          return { ...f, bookmarks: f.bookmarks.filter(b => b.id !== selectedBookmark.id) };
+        }
+        return f;
+      });
+      setFolders(updatedFolders);
+      setDetailModalOpen(false);
+      setSelectedBookmark(null);
+      showToast("Bookmark deleted");
+    }
+  }
+
   return (
     <div className="flex h-screen bg-slate-950 text-slate-200 font-sans overflow-hidden selection:bg-amber-500/30 selection:text-amber-200">
       
@@ -536,6 +551,14 @@ export default function VelvetVault() {
           {toast.type === 'error' ? <AlertCircle size={16}/> : <Shield size={16}/>}
           <span className="text-sm font-medium">{toast.msg}</span>
         </div>
+      )}
+
+      {/* Mobile Sidebar Overlay - Closes sidebar when clicked */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 z-20 md:hidden backdrop-blur-sm transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
 
       {/* Sidebar */}
@@ -604,7 +627,7 @@ export default function VelvetVault() {
                         </div>
                       )}
                       <div className="flex-1 p-5 relative z-10">
-                        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute top-3 right-3 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                            <button onClick={(e) => deleteBookmark(bookmark.id, e)} className="p-1 hover:bg-slate-800 hover:text-red-400 rounded backdrop-blur-sm"><Trash2 size={14} /></button>
                         </div>
                         <h3 className="font-medium text-slate-200 group-hover:text-amber-400 transition-colors line-clamp-2 mb-2 drop-shadow-md">{bookmark.title}</h3>
@@ -691,7 +714,10 @@ export default function VelvetVault() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-1 space-y-6">
                 <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-800">
-                    <h2 className="text-xl font-serif text-amber-100 mb-2 break-words">{selectedBookmark.title}</h2>
+                    <div className="flex justify-between items-start mb-2">
+                        <h2 className="text-xl font-serif text-amber-100 break-words mr-2">{selectedBookmark.title}</h2>
+                        <Button variant="danger" size="small" icon={Trash2} onClick={handleDeleteFromModal} />
+                    </div>
                     <p className="text-sm text-slate-400 mb-3 italic">{selectedBookmark.description}</p>
                     <a href={selectedBookmark.url} target="_blank" rel="noreferrer" className="text-xs text-amber-500 hover:underline break-all flex items-center gap-1 mb-4">
                         {selectedBookmark.url} <ExternalLink size={10} />
