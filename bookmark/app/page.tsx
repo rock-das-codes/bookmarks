@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect, useRef, ChangeEvent, KeyboardEvent, ReactNode } from 'react';
 import { 
   Folder as FolderIcon, Plus, Lock, Unlock, ExternalLink, Trash2, X, Shield, 
