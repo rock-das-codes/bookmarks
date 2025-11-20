@@ -1,0 +1,21 @@
+{
+  "name": "VelvetVault",
+  "short_name": "VelvetVault",
+  "description": "Secure Private Bookmark Manager",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": [
+    {
+      "src": "/images.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Icon_Bird_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
